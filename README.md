@@ -1,53 +1,38 @@
 This is a dashboard for tracking project work progress.
 
-Hardware Selection & Onboarding Configurator
-Context: Use this prompt with a conversational AI to choose your host hardware and optimal setup paths before initiating openclaw onboard [01:48].
-
 Prompt:
-"I am setting up an OpenClaw autonomous AI agent. Help me determine the best hardware configuration and onboarding parameters based on my resources. I will provide my current constraints. Ask me the following questions one by one to give me a tailored recommendation:
+"I am setting up an autonomous AI agent.
 
-What machine am I planning to run this on (old laptop, dedicated Mac Mini/Studio, or a VPS)?
-
-How many gigabytes of RAM does this machine have?
-
-What is my monthly budget for LLM API tokens?
-
-Do I already have an OpenAI or Anthropic API subscription?
-Based on my answers, output the optimal Model Provider (e.g., Anthropic Opus/Sonnet, GPT-5, or Minimax M2.5) and specify if I should route tasks to local open-source models like Qwen Coder or Mistral."
-
-2. Seeding the Agent’s Persona (soul.md & user.md)
-Context: OpenClaw relies on plain-text markdown files to govern its identity [06:26]. Paste the output of this prompt directly into your communication channel (Telegram/Discord) once your bot is online to populate its core memory files [08:00].
-
+Seeding the Agent’s Persona (soul.md & user.md)
 Prompt:
-"Act as an expert AI systems architect. I need to configure the core identity files for my OpenClaw agent. Generate the markdown text for two specific files:
+"Act as an expert AI systems architect. I need to configure the core identity files for my agent. Generate the markdown text for two specific files:
 
 soul.md: Define the persona of an agent named 'Inky' (an autonomous partner, not a passive assistant). It must think critically, push back if my ideas lack logic, maintain high context, and be an aggressive note-taker to prevent memory degradation over time.
 
-user.md: (Leave placeholders for me to fill out) Outline my core professional focus (Content Creation, Software Building, or Portfolio Tracking), my daily workflow preferences, and my standard operating procedures.
+user.md: (Leave placeholders for me to fill out) Outline my core professional focus (Content Creation, Software Building), my daily workflow preferences, and my standard operating procedures.
 
 Ensure the tone is proactive, highly collaborative, and strictly structured for an LLM to digest upon every session startup."
 
-3. Mission Control Generation
-Context: Tina utilizes a custom dashboard as a "Central Monitoring Hub" to track agent tasks, logs, and approvals [08:20]. Instruct your agent via its terminal/chat interface to spin this up.
+Mission Control Generation
+Context: Create a dashboard as a "Central Monitoring Hub" to track tasks, logs, and projects. 
 
 Prompt:
-"Inky, I need you to build a custom 'Mission Control' web dashboard interface to serve as our central hub. The dashboard must include the following distinct tracking modules:
+"I need you to build a custom 'Mission Control' web dashboard interface to serve as a central hub. The dashboard must include the following distinct tracking modules:
 
 Agent Office: A visual feed showing what active multi-agent processes are executing.
 
 Task Tab: A table tracking active tasks, assigned owners, and a live activity log.
 
-Content Pipeline: A dedicated tab containing a 'Topic Watchlist' (aggregating from Hacker News, X, and Reddit) alongside an 'Approval' workflow.
+Content Pipeline: A dedicated tab containing a 'Topic Watchlist' (aggregating from Hacker News and Reddit) alongside an 'Approval' workflow.
 
-Memory System: A portal to view long-term memories pulled from memory.md and chronological daily activity logs.
+Memory System: A sqlite portal to view long-term memories pulled from memory.md and chronological daily activity logs.
 
 Generate and deploy the code for this UI inside our workspace environment."
 
 4. Discord Multi-Channel Structure Configuration
-Context: If transitioning from Telegram to a structured Discord server setup [10:11], use this prompt inside your general Discord server channel once the bot connection is verified.
 
 Prompt:
-"Inky, execute an automated server setup script to organize our communication hub. Create the following dedicated text channels with strict permission settings allowing only you and me access:
+"Execute an automated server setup script to organize our communication hub. Create the following dedicated text channels with strict permission settings allowing only you and me access:
 
 #general - For direct text communication and manual task execution.
 
