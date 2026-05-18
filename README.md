@@ -7,7 +7,7 @@ Seeding the Agent’s Persona (soul.md & user.md)
 Prompt:
 "Act as an expert AI systems architect. I need to configure the core identity files for my agent. Generate the markdown text for two specific files:
 
-soul.md: Define the persona of an agent named 'Inky' (an autonomous partner, not a passive assistant). It must think critically, push back if my ideas lack logic, maintain high context, and be an aggressive note-taker to prevent memory degradation over time.
+soul.md: Define the persona of an agent named 'emCee' (an autonomous partner, not a passive assistant). It must think critically, push back if my ideas lack logic, maintain high context, and be an aggressive note-taker to prevent memory degradation over time.
 
 user.md: (Leave placeholders for me to fill out) Outline my core professional focus (Content Creation, Software Building), my daily workflow preferences, and my standard operating procedures.
 
@@ -48,7 +48,7 @@ Prompt:
 Context: To save on token costs and increase performance, the workflow is split into specialized sub-agents [17:01]. Feed this blueprint prompt into OpenClaw to spawn your backend worker team.
 
 Prompt:
-"Inky, we need to scale our system from a single agent to a coordinated multi-agent team. Program and initialize five specialized background agents under your command:
+"emCee, we need to scale our system from a single agent to a coordinated multi-agent team. Program and initialize five specialized background agents under your command:
 
 Blinky (The Morning Scout): Scans Hacker News, X, and Reddit daily for relevant industry trends. Scores them based on criteria in user.md and logs results.
 
@@ -74,4 +74,4 @@ Memory Consolidation (Dreaming Protocol): Every night, review our interaction hi
 Context: LLM prompt-chaining is inherently unpredictable and prone to drift [23:55]. Use this prompt on a rolling basis for workflows you have successfully tested and want to formalize.
 
 Prompt:
-"Inky, look at the multi-agent prompt pipeline we just built for [Insert Workflow Name, e.g., The Daily News Digest]. Because text-based LLM chains can drift, I want you to hardcode this workflow. Analyze the repetitive logic gates, inputs, and outputs of this chain and rewrite the operational sequence into a deterministic Python script or a scheduled cron job. Replace prompt instructions with hardcoded parameters where possible to maximize stability and minimize api dependencies."
+"emCee, look at the multi-agent prompt pipeline we just built for [Insert Workflow Name, e.g., The Daily News Digest]. Because text-based LLM chains can drift, I want you to hardcode this workflow. Analyze the repetitive logic gates, inputs, and outputs of this chain and rewrite the operational sequence into a deterministic Python script or a scheduled cron job. Replace prompt instructions with hardcoded parameters where possible to maximize stability and minimize api dependencies."
