@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>emCee Mission Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="min-h-screen flex flex-col" x-data="dashboard()">
+        <!-- Header -->
+        <header class="p-6 border-b border-slate-800 flex justify-between items-center glass sticky top-0 z-50">
+            <div class="flex items-center space-x-4">
+                <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center font-bold text-white">eC</div>
+                <h1 class="text-2xl font-bold tracking-tight">emCee <span class="text-indigo-400">Mission Control</span></h1>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="text-xs text-slate-400 uppercase tracking-widest">System Status:</span>
+                <span class="flex h-3 w-3 rounded-full bg-green-500 animate-pulse"></span>
+                <span class="text-sm font-medium">Operational</span>
+            </div>
+        </header>
+
+        <!-- Main Navigation -->
+        <nav class="flex justify-center p-4 space-x-2">
+            <template x-for="tab in tabs">
+                <button 
+                    @click="activeTab = tab.id" 
+                    :class="activeTab === tab.id ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'"
+                    class="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                    x-text="tab.name">
+                </button>
+            </template>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="flex-grow p-6">
+            <!-- Agent Office -->
+            <div x-show="activeTab === 'agents'" class="space-y-6">
+                <h2 class="text-xl font-semibold">Agent Office</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <template x-for="agent in agents">
+                        <div class="glass p-4 rounded-xl">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-bold text-indigo-300" x-text="agent.agent_name"></span>
+                                <span class="text-[10px] px-2 py-1 rounded bg-slate-700 text-slate-300 uppercase" x-text="agent.current_status"></span>
+                            </div>
+                            <div class="text-xs text-slate-500 italic">Last update: <span x-text="formatDate(agent.last_update)"></span></div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Tasks -->
+            <div x-show="activeTab === 'tasks'" class="space-y-6">
+                <h2 class="text-xl font-semibold">Active Tasks</h2>
+                <div class="glass rounded-xl overflow-hidden">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-800/50 text-slate-400 uppercase text-xs">
+                            <tr>
+                                <th class="px-6 py-3">Task</th>
+                                <th class="px-6 py-3">Owner</th>
+                                <th class="px-6 py-3">Status</th>
+                                <th class="px-6 py-3">Activity</th>
+                                <th class="px-6 py-3">Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800">
+                            <template x-for="task in tasks">
+                                <tr class="hover:bg-slate-800/30 transition-colors">
+                                    <td class="px-6 py-4 font-medium" x-text="task.task_name"></td>
+                                    <td class="px-6 py-4" x-text="task.owner"></td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2 py-1 rounded text-[10px] bg-indigo-900 text-indigo-200" x-text="task.status"></span>
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-400" x-text="task.activity_log"></td>
+                                    <td class="px-6 py-4 text-xs text-slate-500" x-text="formatDate(task.updated_at)"></td>
+                                </tr>
+                            </template>
+                            <template x-if="tasks.length === 0">
+                                <tr><td colspan="5" class="px-6 py-10 text-center text-slate-500">No active tasks found.</td></tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Content Pipeline -->
+            <div x-show="activeTab === 'pipeline'" class="space-y-6">
+                <h2 class="text-xl font-semibold">Content Pipeline</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="glass p-6 rounded-xl">
+                        <h3 class="text-sm font-semibold text-slate-400 uppercase mb-4">Topic Watchlist</h3>
+                        <div class="space-y-3">
+                            <template x-for="item in pipeline.filter(i => i.status === 'watchlist')">
+                                <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg border border-slate-700">
+                                    <div>
+                                        <div class="font-medium" x-text="item.topic"></div>
+                                        <div class="text-xs text-slate-500" x-text="item.source"></div>
+                                    </div>
+                                    <div class="flex items-center space-x-4">
+                                        <span class="text-xs font-bold text-green-400" x-text="'Score: ' + item.score"></span>
+                                        <button class="text-xs bg-indigo-600 px-2 py-1 rounded hover:bg-indigo-500">Approve</button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="glass p-6 rounded-xl">
+                        <h3 class="text-sm font-semibold text-slate-400 uppercase mb-4">Approved for Production</h3>
+                        <div class="space-y-3">
+                            <template x-for="item in pipeline.filter(i => i.status === 'approved')">
+                                <div class="flex justify-between items-center p-3 bg-indigo-900/30 rounded-lg border border-indigo-700/50">
+                                    <div class="font-medium" x-text="item.topic"></div>
+                                    <div class="text-xs text-indigo-300">In Production</div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory System -->
+            <div x-show="activeTab === 'memory'" class="space-y-6">
+                <h2 class="text-xl font-semibold">Memory System</h2>
+                <div class="glass rounded-xl p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex space-x-4">
+                            <button @click="memFilter = 'all'" :class="memFilter === 'all' ? 'text-indigo-400' : 'text-slate-400'" class="text-sm font-medium">All</button>
+                            <button @click="memFilter = 'permanent'" :class="memFilter === 'permanent' ? 'text-indigo-400' : 'text-slate-400'" class="text-sm font-medium">Permanent</button>
+                            <button @click="memFilter = 'dream'" :class="memFilter === 'dream' ? 'text-indigo-400' : 'text-slate-400'" class="text-sm font-medium">Dreams</button>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <template x-for="mem in filteredMemories">
+                            <div class="p-4 rounded-lg bg-slate-800/40 border border-slate-700">
+                                <div class="flex justify-between text-[10px] text-slate-500 uppercase mb-2">
+                                    <span x-text="mem.type"></span>
+                                    <span x-text="formatDate(mem.created_at)"></span>
+                                </div>
+                                <div class="text-sm" x-text="mem.content"></div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="p-6 text-center text-slate-600 text-xs">
+            &copy; 2026 emCee Framework | Powered by PI agent | gemma4 & qwen3.6
+        </footer>
+    </div>
+
+    <script>
+        function dashboard() {
+            return {
+                activeTab: 'agents',
+                memFilter: 'all',
+                tabs: [
+                    { id: 'agents', name: 'Agent Office' },
+                    { id: 'tasks', name: 'Tasks' },
+                    { id: 'pipeline', name: 'Pipeline' },
+                    { id: 'memory', name: 'Memory' },
+                ],
+                agents: [],
+                tasks: [],
+                pipeline: [],
+                memories: [],
+                async init() {
+                    await this.refreshData();
+                    setInterval(() => this.refreshData(), 5000);
+                },
+                async refreshData() {
+                    this.agents = await (await fetch('/api/agents')).json();
+                    this.tasks = await (await fetch('/api/tasks')).json();
+                    this.pipeline = await (await fetch('/api/pipeline')).json();
+                    this.memories = await (await fetch('/api/memories')).json();
+                },
+                get filteredMemories() {
+                    if (this.memFilter === 'all') return this.memories;
+                    return this.memories.filter(m => m.type === this.memFilter);
+                },
+                formatDate(dateStr) {
+                    if (!dateStr) return 'N/A';
+                    return new Date(dateStr).toLocaleString();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
